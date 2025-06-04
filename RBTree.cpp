@@ -206,24 +206,21 @@ private:
     }
 
     // вспомогательная функция: вывод дерева
-    void printHelper(Node* root, string indent, bool last)
-    {
-        if (root != nullptr) {
-            cout << indent;
-            if (last) {
-                cout << "R----";  // правый потомок
-                indent += "   ";
-            }
-            else {
-                cout << "L----";  // левый потомок
-                indent += "|  ";
-            }
-            string sColor = (root->color == RED) ? "RED" : "BLACK";
-            cout << root->data << "(" << sColor << ")" << endl;  // вывод данных и цвета
-            printHelper(root->left, indent, false);  // рекурсивный вывод левого поддерева
-            printHelper(root->right, indent, true);  // рекурсивный вывод правого поддерева
-        }
+    void printHelper(Node* node, string prefix = "", bool isLeft = false)
+{
+    if (node != nullptr) {
+        if (node->right)
+            printHelper(node->right, prefix + (isLeft ? "│   " : "    "), false);
+
+        cout << prefix;
+        cout << (isLeft ? "└──" : "┌──");
+        cout << node->data << "(" << (node->color == RED ? "RED" : "BLACK") << ")" << endl;
+
+        if (node->left)
+            printHelper(node->left, prefix + (isLeft ? "    " : "│   "), true);
     }
+}
+
 
     // вспомогательная функция: удаление всех узлов дерева
     void deleteTree(Node* node)
@@ -329,14 +326,13 @@ public:
 
     // публичная функция: вывод дерева
     void printTree()
-    {
-        if (root == nullptr)
-            cout << "Tree is empty." << endl;
-        else {
-            cout << "Red-Black Tree:" << endl;
-            printHelper(root, "", true);  // вызываем вспомогательную функцию
-        }
+{
+    if (root == nullptr)
+        cout << "Tree is empty." << endl;
+    else {
+        printHelper(root, "", false);
     }
+}
 };
 
 int main()
