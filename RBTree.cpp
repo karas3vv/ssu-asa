@@ -214,7 +214,7 @@ private:
 
         cout << prefix;
         cout << (isLeft ? "└──" : "┌──");
-        cout << node->data << "(" << (node->color == RED ? "RED" : "BLACK") << ")" << endl;
+        cout << node->data << "(" << (node->color == RED ? "R" : "B") << ")" << endl;
 
         if (node->left)
             printHelper(node->left, prefix + (isLeft ? "    " : "│   "), true);
