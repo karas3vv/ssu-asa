@@ -1,0 +1,733 @@
+\documentclass[otchet]{SCWorks}
+% Тип обучения (одно из значений):
+%    bachelor   - бакалавриат (по умолчанию)
+%    spec       - специальность
+%    master     - магистратура
+% Форма обучения (одно из значений):
+%    och        - очное (по умолчанию)
+%    zaoch      - заочное
+% Тип работы (одно из значений):
+%    coursework - курсовая работа (по умолчанию)
+%    referat    - реферат
+%  * otchet     - универсальный отчет
+%  * nirjournal - журнал НИР
+%  * digital    - итоговая работа для цифровой кафедры
+%    diploma    - дипломная работа
+%    pract      - отчет о научно-исследовательской работе
+%    autoref    - автореферат выпускной работы
+%    assignment - задание на выпускную квалификационную работу
+%    review     - отзыв руководителя
+%    critique   - рецензия на выпускную работу
+
+% * Добавлены вручную. За вопросами к @mchernigin
+\usepackage{preamble}
+
+\begin{document}
+
+% Кафедра (в родительном падеже)
+\chair{информатики и программирования}
+
+% Тема работы
+\title{Анализ красно-чёрного дерева}
+
+% Курс
+\course{2}
+
+% Группа
+\group{251}
+
+% Факультет (в родительном падеже) (по умолчанию "факультета КНиИТ")
+% \department{факультета КНиИТ}
+
+% Специальность/направление код - наименование
+% \napravlenie{02.03.02 "--- Фундаментальная информатика и информационные технологии}
+% \napravlenie{02.03.01 "--- Математическое обеспечение и администрирование информационных систем}
+% \napravlenie{09.03.01 "--- Информатика и вычислительная техника}
+\napravlenie{09.03.04 "--- Программная инженерия}
+% \napravlenie{10.05.01 "--- Компьютерная безопасность}
+
+% Для студентки. Для работы студента следующая команда не нужна.
+% \studenttitle{студентки}
+
+% Фамилия, имя, отчество в родительном падеже
+\author{Карасева Вадима Дмитриевича}
+
+% Заведующий кафедрой
+\chtitle{доцент, к.\,ф.-м.\,н.}
+\chname{С.\,В.\,Миронов}
+
+% Руководитель ДПП ПП для цифровой кафедры (перекрывает заведующего кафедры)
+% \chpretitle{
+%     заведующий кафедрой математических основ информатики и олимпиадного\\
+%     программирования на базе МАОУ <<Ф"=Т лицей №1>>
+% }
+% \chtitle{г. Саратов, к.\,ф.-м.\,н., доцент}
+% \chname{Кондратова\, Ю.\,Н.}
+
+% Научный руководитель (для реферата преподаватель проверяющий работу)
+\satitle{доцент, к.\,ф.-м.\,н.} %должность, степень, звание
+\saname{М.\,И.\,Сафрончик}
+
+% Руководитель практики от организации (руководитель для цифровой кафедры)
+\patitle{доцент, к.\,ф.-м.\,н.}
+\paname{С.\,В.\,Миронов}
+
+% Руководитель НИР
+\nirtitle{доцент, к.\,п.\,н.} % степень, звание
+\nirname{В.\,А.\,Векслер}
+
+% Семестр (только для практики, для остальных типов работ не используется)
+\term{2}
+
+% Наименование практики (только для практики, для остальных типов работ не
+% используется)
+\practtype{учебная}
+
+% Продолжительность практики (количество недель) (только для практики, для
+% остальных типов работ не используется)
+\duration{2}
+
+% Даты начала и окончания практики (только для практики, для остальных типов
+% работ не используется)
+\practStart{01.07.2024}
+\practFinish{13.01.2024}
+
+% Год выполнения отчета
+\date{2025}
+
+\maketitle
+
+% Включение нумерации рисунков, формул и таблиц по разделам (по умолчанию -
+% нумерация сквозная) (допускается оба вида нумерации)
+\secNumbering
+
+\tableofcontents
+
+% Раздел "Обозначения и сокращения". Может отсутствовать в работе
+% \abbreviations
+% \begin{description}
+%     \item ... "--- ...
+%     \item ... "--- ...
+% \end{description}
+
+% Раздел "Определения". Может отсутствовать в работе
+% \definitions
+
+% Раздел "Определения, обозначения и сокращения". Может отсутствовать в работе.
+% Если присутствует, то заменяет собой разделы "Обозначения и сокращения" и
+% "Определения"
+% \defabbr
+
+% \intro
+
+% После введения — серии \section, \subsection и т.д.
+
+\section{Пример программы}
+\begin{minted}[fontsize=\small, breaklines=true, style=bw, linenos, highlightlines={}]{cpp}
+#include <iostream>
+using namespace std;
+
+struct tree // Cтруктура дерева
+{
+	int inf;
+	tree* left;
+	tree* right;
+	tree* parent;
+	bool color; // True - черный, False – красный
+};
+
+
+// Повороты
+void left_rotate(tree*& tr, tree* x) // Левый
+{
+	tree* y = x->right; // Y - правый ребенок X
+	x->right = y->left; // Левый ребенок Y становится правым ребенком X  
+	if (y->left) // Если левый ребенок Y есть
+		y->left->parent = x; // Родителем левого ребенка становится X
+	y->parent = x->parent; // Родитель для Y становится родитель X 
+	if (x->parent)
+	{
+		if (x == x->parent->left) // Eсли X левый ребенок 
+			x->parent->left = y; // Y становится левым ребенком для родителя X
+		else
+			x->parent->right = y;// Становится правым ребенком соответственно
+	}
+	y->left = x; // X становится левым ребенком Y
+	x->parent = y; // Y становится родитем X
+	if (!y->parent) // Если у Y нет родителя
+	{
+		tr = y;
+		y->color = true; // Y становится корнем и окрашивается в черный цвет
+	}
+}
+
+void right_rotate(tree*& tr, tree* x) // правый поворот
+{
+	tree* y = x->left;
+	x->left = y->right;
+	if (y->right)
+		y->right->parent = x;
+	y->parent = x->parent;
+	if (x->parent)
+	{
+		if (x == x->parent->left)
+			x->parent->left = y;
+		else
+			x->parent->right = y;
+	}
+	y->right = x;
+	x->parent = y;
+	if (!y->parent)
+	{
+		tr = y;
+		y->color = true;
+	}
+}
+
+// создание узлов
+tree* node(tree* p, int x) // красный узел
+{
+	tree* n = new tree;
+	n->inf = x;
+	n->parent = p;
+	n->right = NULL;
+	n->left = NULL;
+	n->color = false;
+	return n;
+}
+
+tree* root(int x) // черный узел
+{
+	tree* n = new tree;
+	n->inf = x;
+	n->parent = NULL;
+	n->right = NULL;
+	n->left = NULL;
+	n->color = true;
+	return n;
+}
+
+tree* grandparent(tree* x) // дедушка
+{
+	if (x && x->parent)
+		return x->parent->parent;
+	else
+		return NULL;
+}
+
+tree* uncle(tree* x) // дядя
+{
+	tree* g = grandparent(x);
+	if (!g)
+		return NULL;
+
+	if (x->parent == g->left)
+		return g->right;
+	else
+		return g->left;
+}
+
+
+tree* brother(tree* x) // брат
+{
+	if (x && x->parent)
+	{
+		if (x->parent->left == x)
+			return x->parent->right;
+		else
+			return x->parent->left;
+	}
+	else
+		return NULL;
+}
+
+void preorder_color(tree* tr) // прямой обход с цветами (К-Л-П)
+{
+	if (tr)
+	{
+		cout << tr->inf; // корень
+		if (tr->color == true)
+			cout << " - b  ";
+		else
+			cout << " - r  ";
+		preorder_color(tr->left); // левый 
+		preorder_color(tr->right); // правый 
+	}
+}
+
+// вставка
+void insert_case5(tree*& tr, tree* x) // Родитель красный, дядя, дед, брат и дети черные
+{
+	tree* G = grandparent(x); // Дед
+	x->parent->color = true; // Родитель становится черным
+	G->color = false; // Дед становится красным
+	if ((x == x->parent->left) && (x->parent = G->left)) // Если Х - левый ребенок и родитель - левый ребенок, то правый поворот, иначе левый
+		right_rotate(tr, G);
+	else
+		left_rotate(tr, G);
+}
+
+void insert_case4(tree*& tr, tree* x) // родитель красный, дядя черный
+{
+	tree* G = grandparent(x); // Дед
+	if ((x == x->parent->right) && (x->parent == G->left)) // Если Х - правый ребенок и родитель - левый ребенок
+	{
+		left_rotate(tr, x->parent); // Левый поворот
+		x = x->left; // Переходим к левому ребенку
+	}
+	else
+	{
+		if ((x == x->parent->left) && (x->parent == G->right)) // Иначе правый поворот
+		{
+			right_rotate(tr, x->parent);
+			x = x->right;
+		}
+	}
+	insert_case5(tr, x);
+}
+
+void insert_case3(tree*& tr, tree* x) // если родитель, Дядя и X - красные
+{
+	tree* U = uncle(x); // дядя
+	tree* G = grandparent(x); // дедушка
+	if (U && U->color == false && x->parent->color == false)  // если дядя и родитель красные
+	{
+		x->parent->color = true; // родитель становится черным
+		U->color = true; // дядя становится черным
+		G->color = false; // дед - красным
+
+		if (!G->parent) // если у деда нет родителя - становится черным
+			G->color = true;
+		else
+		{
+			if (grandparent(G)) // если у деда есть дед
+				insert_case3(tr, G);
+			else
+				return;
+		}
+	}
+	else
+		insert_case4(tr, x);
+}
+
+void insert_case2(tree*& tr, tree* x) // если родитель х - красный, то переходим к 3 случаю
+{
+	if (x->parent->color == false)
+		insert_case3(tr, x);
+	else
+		return;
+}
+
+void insert_case1(tree*& tr, tree* x) // если узел - корень
+{
+	if (!x->parent)
+		x->color = true; // становится черным
+	else
+		insert_case2(tr, x);
+}
+
+void insert(tree*& tr, tree* prev, int x) // Prev - предыдущий узел
+{
+	if ((x < prev->inf) && (!prev->left)) // Если Х меньше предыдущего и у него нет левого ребенка
+	{
+		prev->left = node(prev, x); // Становится левым ребенком prev
+		insert_case1(tr, prev->left);
+	}
+	else
+	{
+		if ((x > prev->inf) && (!prev->right)) // Если Х больше предыдущего и у него нет правого ребенка
+		{
+			prev->right = node(prev, x); // Становится правым ребенком prev
+			insert_case1(tr, prev->right);
+		}
+		else
+		{
+			if ((x < prev->inf) && (prev->left)) // Если меньше(больше) и есть левый(правый) ребенок, идем дальше по дереву
+				insert(tr, prev->left, x);
+			else
+			{
+				if ((x > prev->inf) && (prev->right))
+				{
+					insert(tr, prev->right, x);
+				}
+			}
+		}
+	}
+}
+
+// удаление
+void del_element6(tree*& tr, tree* x) // брат, близкий племянник - черные, дальний племянник - красный, а его дети - черные
+{
+	tree* B = brother(x);
+
+	B->color = x->parent->color; // брат становится того же цвета, что и родитель
+	x->parent->color = true; // родитель становится черным
+
+	if (x == x->parent->left)  // если Х - левый ребенок
+	{
+		B->right->color = true; // правый племянник становится черным
+		left_rotate(tr, x->parent); // левый поворот
+	}
+	else
+	{
+		B->left->color = true; // левый племянник становится черным
+		right_rotate(tr, x->parent); // правый поворот
+	}
+}
+
+void del_element5(tree*& tr, tree* x) // брат, дальний племянник - черные, близкий племянник - красный, а его дети - черные
+{
+	tree* B = brother(x); // брат
+
+	bool col_l; // цвет левого племянника
+	bool col_r; // цвет правого племянника
+
+	if (!B->left)
+		col_l = true;
+	else
+		col_l = B->left->color;
+
+	if (!B->right)
+		col_r = true;
+	else
+		col_r = B->right->color;
+
+	if (x == x->parent->left && col_l == false && col_r == true) // если Х - левый ребенок, левый племянник - красный, а правый - черный
+	{
+		B->color = false; // брат становится красным
+		B->left->color = true; // левый племянник становится черным
+		right_rotate(tr, B); // правый поврот
+	}
+	else
+	{
+		if (x == x->parent->right && col_l == true && col_r == false) // Если Х - правый ребенок, левый племянник - черный, а правый - красный
+		{
+			B->color = false; // брат становится красным
+			B->right->color = true; // правый племянник становится черным
+			left_rotate(tr, B); // левый поворот
+		}
+	}
+	del_element6(tr, x);
+}
+
+void del_element4(tree*& tr, tree* x) // Х, брат, племянники - черные, родитель красный
+{
+	tree* B = brother(x); // брат
+
+	bool col_l; // цвет л племянника
+	bool col_r; // цвет п племянника
+
+	if (!B->left)
+		col_l = true;
+	else
+		col_l = B->left->color;
+
+	if (!B->right)
+		col_r = true;
+	else
+		col_r = B->right->color;
+
+	if (x->parent->color == false && B->color == true && col_l == true && col_r == true) // Если родитель - красный, а брат и племянники - черные
+	{
+		B->color = false; // брат становится красным
+		x->parent->color = true; // родитель становится черным
+	}
+	else
+		del_element5(tr, x);
+}
+
+void del_element3(tree*& tr, tree* x) // Х, родитель, брат, племянники - черные
+{
+	tree* B = brother(x); // брат
+
+	bool col_l; // цвет л племянника
+	bool col_r; // цвет п племянника
+
+	if (!B->left)
+		col_l = true;
+	else
+		col_l = B->left->color;
+
+	if (!B->right)
+		col_r = true;
+	else
+		col_r = B->right->color;
+
+	if (x->parent->color == true && B->color == true && col_l == true && col_r == true) // Если родитель, брат и племянники - черные
+	{
+		B->color = false; // брат становится красным
+
+		if (!x->parent) // если Х - корень
+		{
+			if (x->left)
+				x->left->color = true; // если есть левый ребенок - он черный
+			else
+			{
+				tr = x;
+				x->right->color = true;
+			}
+		}
+		else
+		{
+			tree* B = brother(x);
+			if (B->color == false)
+			{
+				x->parent->color = false;
+				B->color = true;
+				if (x == x->parent->left)
+					left_rotate(tr, x->parent);
+				else
+					right_rotate(tr, x->parent);
+			}
+			del_element3(tr, x);
+		}
+	}
+	else
+		del_element4(tr, x);
+}
+
+void del_element2(tree*& tr, tree* x) // х - черный, родитель черный, брат красный
+{
+	tree* B = brother(x);
+	if (B->color == false)
+	{
+		x->parent->color = false;
+		B->color = true;
+		if (x == x->parent->left)
+			left_rotate(tr, x->parent);
+		else
+			right_rotate(tr, x->parent);
+	}
+	del_element3(tr, x);
+}
+
+void del_element1(tree*& tr, tree* x) // x - корень дерева, одна ветка
+{
+	if (!x->parent)
+	{
+		if (x->left)
+			x->left->color = true;
+		else {
+			tr = x;
+			x->right->color = true;
+		}
+	}
+	else {
+		del_element2(tr, x);
+	}
+}
+
+void replace(tree*& tr, tree* x) // случай когда удаляем x с одним ребенком
+{
+	if (x->left)
+	{
+		if (x->parent)
+		{
+			tree* ch = x->left;
+			ch->parent = x->parent;
+			if (x == x->parent->left)
+				x->parent->left = ch;
+			else
+				x->parent->right = ch;
+		}
+	}
+	else
+	{
+		if (x->parent)
+		{
+			tree* ch = x->right;
+			ch->parent = x->parent;
+			if (x == x->parent->left)
+				x->parent->left = ch;
+			else
+				x->parent->right = ch;
+		}
+	}
+}
+
+tree* Max_par(tree* tr)
+{
+	if (!tr->right)
+		return tr; // нет правого ребенка
+	else
+		return Max_par(tr->right); // идем по правой ветке до конца
+}
+
+void delete_one(tree*& tr, tree* x) // удаление
+{
+	tree* buf = NULL;
+
+	if (x->right && x->left) // есть два ребенка
+	{
+
+		buf = Max_par(x->left); // предыдущий по значению элемент
+
+		int tpm = x->inf;
+		x->inf = buf->inf; // меняем местами с предыдущим по значению элементом
+		buf->inf = tpm;
+
+		x = buf;
+	}
+	if (x->right || x->left) // есть один ребенок
+	{
+		tree* ch = NULL;
+		if (x->left && !x->right)
+			ch = x->left;
+		if (x->right && !x->left)
+			ch = x->right;
+
+		replace(tr, x);
+		if (x->color == true) // если удаляемый элемент был красным то тот, что на его месте перекрашиваем в красный (если нужно)
+		{
+			if (ch->color == false)
+				ch->color = true;
+			else
+				del_element1(tr, x);
+		}
+	}
+	else // нет детей 
+	{
+		if (!x->right && !x->left)
+		{
+			if (x->color == true) {
+				del_element1(tr, x);
+			}
+			else
+			{
+				if (x == x->parent->left)
+					x->parent->left = NULL;
+				else
+					x->parent->right = NULL;
+			}
+		}
+	}
+
+	if (!x->left && !x->right)
+	{
+		if (x == x->parent->left)
+			x->parent->left = NULL;
+		else
+		{
+			if (x == x->parent->right)
+				x->parent->right = NULL;
+		}
+	}
+
+	delete x;
+}
+
+tree* find(tree* tr, int x) // поиск
+{
+	if (!tr || x == tr->inf) // нашли или дошли до конца ветки
+		return tr;
+	if (x < tr->inf)
+		return find(tr->left, x); // ищем по левой ветке
+	else
+		return find(tr->right, x); // ищем по правой ветке
+}
+
+int main() {
+	setlocale(LC_ALL, "Russian");
+
+	tree* tr = NULL;
+
+	cout << "Введите количество элементов: \n";
+	int n; cin >> n;
+
+	cout << "Введите элементы: \n";
+	int x; cin >> x;
+	tr = root(x);
+	for (int i = 0; i < n - 1; ++i) {
+		cin >> x;
+		insert(tr, tr, x);
+	}
+
+	cout << "Прямой обход: ";
+	preorder_color(tr);
+	cout << endl;
+
+	for (int i = 0; i < 1; i++) {
+		cout << "Введите элемент для удаления: ";
+		cin >> x;
+		delete_one(tr, find(tr, x));
+		cout << endl;
+
+		cout << "Прямой обход: ";
+		preorder_color(tr);
+		cout << endl;
+	}
+
+
+	for (int i = 0; i < 1; i++) {
+		cout << "Введите элемент для удаления: ";
+		cin >> x;
+		delete_one(tr, find(tr, x));
+		cout << endl;
+
+		cout << "Прямой обход: ";
+		preorder_color(tr);
+		cout << endl;
+	}
+
+
+
+	// Ввод нового элемента
+	cout << "Введите элемент для вставки: ";
+	cin >> x;
+	insert(tr, tr, x); // Вставляем введенный элемент
+
+	// Вывод дерева после вставки
+	cout << "Прямой обход после вставки нового элемента: ";
+	preorder_color(tr);
+	cout << endl;
+
+	return 0;
+}
+\end{minted}
+
+\section{Поиск в красно"=черном дереве}
+Пусть у красно"=чёрного дерева будет высота h. Так как у красной вершины чёрные дети (по свойству 3), количество красных вершин не больше h/2. Тогда чёрных вершин не меньше, чем h/2 - 1. Для количества внутренних вершин в дереве выполняется неравенство N$\leq$h/2-1. Прологарифмировав неравенство, имеем: log(N+1)$\geq$h/2 → 2log(N+1)$\geq$h → h$\leq$2 log (N + 1).
+Во всех случаях операция поиска займёт не более O(logN) времени, так как красно-чёрное дерево является сбалансированным.
+
+\section{Вставка в красно-черном дереве}
+\subsection{Лучший случай}
+Никакие свойства не были нарушены либо произошло просто перекрашивание, занимающее константное время. Сложность — O(logN).
+
+\subsection{Худший случай}
+Красно-чёрным деревьям требуется не более 2 поворотов для восстановления баланса, каждый из которых занимает константное время. Так что в худшем случае при вставке будет 2 оборота, и временная сложность составит O(logN).
+
+\subsection{Средний случай}
+Средний случай является средним значением всех возможных случаев, следовательно, временная сложность вставки в этом случае также составит O(logN).
+Таким образом, временная сложность для всех случаев равна O(logN).
+
+\section{Удаление в красно-черном дереве}
+\subsection{Лучший случай}
+В лучшем случае вращений нет, и может происходить разве что перекрашивание за константное время, потому что мы просто обращаемся к областям памяти. Временная сложность составит O(logN).
+
+\subsection{Худший случай}
+Красно-чёрным деревьям требуется не более 3 поворотов во время удаления. Так что в худшем случае при удалении будет 3 поворота и временная сложность составит O(log N).
+\subsection{Средний случай}
+Средний случай является средним значением всех возможных случаев, следовательно, временная сложность вставки в этом случае также составит O(log N).
+Таким образом, временная сложность для всех случаев равна O(logN).
+
+\section{Обходы дерева}
+Красно-чёрное дерево, также, как и дерево бинарного поиска имеет 3 основных обхода: прямой, обратный и симметричный. Их разница заключается в том, в каком порядке мы обращаемся к элементам. Каждый из них будет иметь временную сложность O(N), так как процедура вызывается ровно два раза для каждого узла дерева.
+
+\section{Расход памяти}
+Расход памяти в красно-чёрном дереве происходит так же, как в двоичном дереве поиска, и определяется общим количеством узлов. Поэтому получаем O(N), потому что нам не нужно дополнительное пространство для хранения повторяющихся структур данных. Данный вывод следует из того, что каждый узел имеет три указателя: левый ребёнок, правый ребёнок и родитель. Каждый узел занимает O(1) памяти. Для отслеживания цвета каждого узла требуется только один бит информации на каждый узел. Во многих случаях дополнительный бит данных может храниться без дополнительных затрат памяти. В результате сложность по памяти будет равна O(N), где N – количество узлов в дереве.
+
+Вращение и перекрашивание происходят за время O(1). Временная сложность всех функций равна O(logN), потому что дерево всегда сбалансированное.
+
+% Отобразить все источники. Даже те, на которые нет ссылок.
+% \nocite{*}
+
+% \begin{thebibliography}{99}
+	\bibliographystyle{ugost2003}
+
+% \end{thebibliography}
+
+% Окончание основного документа и начало приложений Каждая последующая секция
+% документа будет являться приложением
+\appendix
+
+\end{document}

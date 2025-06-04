@@ -1,0 +1,33 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{quickSort}\PYG{p}{(}\PYG{n}{std}\PYG{o}{::}\PYG{n}{vector}\PYG{o}{\PYGZlt{}}\PYG{k+kt}{int}\PYG{o}{\PYGZgt{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{arr}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{left}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{right}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{c+c1}{// Базовый случай: если подмассив содержит 0 или 1 элемент}
+\PYG{+w}{    }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{left}\PYG{+w}{ }\PYG{o}{\PYGZgt{}=}\PYG{+w}{ }\PYG{n}{right}\PYG{p}{)}\PYG{+w}{ }\PYG{k}{return}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// O(1)}
+
+\PYG{+w}{    }\PYG{c+c1}{// 1. Выбор опорного элемента (pivot)}
+\PYG{+w}{    }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{pivot}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{arr}\PYG{p}{[(}\PYG{n}{left}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{right}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{/}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{p}{];}\PYG{+w}{ }\PYG{c+c1}{// O(1) \PYGZhy{} средний элемент}
+\PYG{+w}{    }\PYG{c+c1}{// Можно выбрать первый, последний или случайный элемент}
+
+\PYG{+w}{    }\PYG{c+c1}{// 2. Разделение (partition)}
+\PYG{+w}{    }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{left}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// O(1)}
+\PYG{+w}{    }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{j}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{right}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// O(1)}
+
+\PYG{+w}{    }\PYG{k}{while}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{i}\PYG{+w}{ }\PYG{o}{\PYGZlt{}=}\PYG{+w}{ }\PYG{n}{j}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{c+c1}{// O(kn), n \PYGZhy{} количество элементов, k \PYGZhy{} количество повторений внешнего цикла}
+\PYG{+w}{        }\PYG{c+c1}{// Ищем элемент больше опорного слева}
+\PYG{+w}{        }\PYG{k}{while}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{arr}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{pivot}\PYG{p}{)}\PYG{+w}{ }\PYG{n}{i}\PYG{o}{++}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// O(t), t – количество элементов до опорного}
+
+\PYG{+w}{        }\PYG{c+c1}{// Ищем элемент меньше опорного справа}
+\PYG{+w}{        }\PYG{k}{while}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{arr}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{pivot}\PYG{p}{)}\PYG{+w}{ }\PYG{n}{j}\PYG{o}{\PYGZhy{}\PYGZhy{}}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// O(m)}
+
+\PYG{+w}{        }\PYG{c+c1}{// Если индексы не пересеклись, меняем элементы местами}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{i}\PYG{+w}{ }\PYG{o}{\PYGZlt{}=}\PYG{+w}{ }\PYG{n}{j}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{c+c1}{// O(t + m) = O(n)}
+\PYG{+w}{            }\PYG{n}{std}\PYG{o}{::}\PYG{n}{swap}\PYG{p}{(}\PYG{n}{arr}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],}\PYG{+w}{ }\PYG{n}{arr}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]);}\PYG{+w}{ }\PYG{c+c1}{// O(1)}
+\PYG{+w}{            }\PYG{n}{i}\PYG{o}{++}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// O(1)}
+\PYG{+w}{            }\PYG{n}{j}\PYG{o}{\PYGZhy{}\PYGZhy{}}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// O(1)}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{c+c1}{// 3. Рекурсивные вызовы для подмассивов}
+\PYG{+w}{    }\PYG{n}{quickSort}\PYG{p}{(}\PYG{n}{arr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{left}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{j}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// O(log n)}
+\PYG{+w}{    }\PYG{n}{quickSort}\PYG{p}{(}\PYG{n}{arr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{i}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{right}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// O(log n)}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

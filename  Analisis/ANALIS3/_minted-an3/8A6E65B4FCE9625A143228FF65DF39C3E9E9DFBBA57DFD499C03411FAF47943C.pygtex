@@ -1,0 +1,189 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// Структура узла двоичного дерева поиска}
+\PYG{k}{struct}\PYG{+w}{ }\PYG{n+nc}{Node}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{key}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{Node}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{left}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{Node}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{right}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{n}{Node}\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{k}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{n}{key}\PYG{p}{(}\PYG{n}{k}\PYG{p}{),}\PYG{+w}{ }\PYG{n}{left}\PYG{p}{(}\PYG{k}{nullptr}\PYG{p}{),}\PYG{+w}{ }\PYG{n}{right}\PYG{p}{(}\PYG{k}{nullptr}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}\PYGZcb{}}
+\PYG{p}{\PYGZcb{};}
+
+\PYG{c+c1}{// Класс двоичного дерева поиска}
+\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{BinarySearchTree}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{k}{private}\PYG{o}{:}
+\PYG{+w}{    }\PYG{n}{Node}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{root}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{c+c1}{// Рекурсивная функция для добавления узла в дерево}
+\PYG{+w}{    }\PYG{n}{Node}\PYG{o}{*}\PYG{+w}{ }\PYG{n+nf}{insertRec}\PYG{p}{(}\PYG{n}{Node}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{root}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{key}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{root}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{k}{nullptr}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k}{return}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Node}\PYG{p}{(}\PYG{n}{key}\PYG{p}{);}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{key}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{key}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{insertRec}\PYG{p}{(}\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{key}\PYG{p}{);}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{else}\PYG{+w}{ }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{key}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{key}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{insertRec}\PYG{p}{(}\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{key}\PYG{p}{);}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{root}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{c+c1}{// Нахождение минимального узла в поддереве}
+\PYG{+w}{    }\PYG{n}{Node}\PYG{o}{*}\PYG{+w}{ }\PYG{n+nf}{findMin}\PYG{p}{(}\PYG{n}{Node}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{node}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{Node}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{current}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{node}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{while}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{current}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{current}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{nullptr}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{current}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{current}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{current}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{c+c1}{// Рекурсивная функция для удаления узла из дерева}
+\PYG{+w}{    }\PYG{n}{Node}\PYG{o}{*}\PYG{+w}{ }\PYG{n+nf}{deleteRec}\PYG{p}{(}\PYG{n}{Node}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{root}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{key}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{root}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{k}{nullptr}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{root}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{key}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{key}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{deleteRec}\PYG{p}{(}\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{key}\PYG{p}{);}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{else}\PYG{+w}{ }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{key}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{key}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{deleteRec}\PYG{p}{(}\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{key}\PYG{p}{);}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{else}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{k}{nullptr}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{Node}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{temp}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{;}
+\PYG{+w}{                }\PYG{k}{delete}\PYG{+w}{ }\PYG{n}{root}\PYG{p}{;}
+\PYG{+w}{                }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{temp}\PYG{p}{;}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{            }\PYG{k}{else}\PYG{+w}{ }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{k}{nullptr}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{Node}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{temp}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{;}
+\PYG{+w}{                }\PYG{k}{delete}\PYG{+w}{ }\PYG{n}{root}\PYG{p}{;}
+\PYG{+w}{                }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{temp}\PYG{p}{;}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{            }\PYG{n}{Node}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{temp}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{findMin}\PYG{p}{(}\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{);}
+\PYG{+w}{            }\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{key}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{temp}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{key}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{deleteRec}\PYG{p}{(}\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{temp}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{key}\PYG{p}{);}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{root}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{c+c1}{// Рекурсивная функция для поиска узла по ключу}
+\PYG{+w}{    }\PYG{n}{Node}\PYG{o}{*}\PYG{+w}{ }\PYG{n+nf}{searchRec}\PYG{p}{(}\PYG{n}{Node}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{root}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{key}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{root}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{k}{nullptr}\PYG{+w}{ }\PYG{o}{||}\PYG{+w}{ }\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{key}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{key}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{root}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{key}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{key}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{searchRec}\PYG{p}{(}\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{key}\PYG{p}{);}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{searchRec}\PYG{p}{(}\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{key}\PYG{p}{);}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{c+c1}{// Рекурсивная функция для обхода дерева в порядке inorder}
+\PYG{+w}{    }\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{inorderRec}\PYG{p}{(}\PYG{n}{Node}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{root}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{root}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{nullptr}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{inorderRec}\PYG{p}{(}\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{);}
+\PYG{+w}{            }\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{key}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} \PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n}{inorderRec}\PYG{p}{(}\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{);}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{c+c1}{// Рекурсивная функция для обхода дерева в порядке preorder}
+\PYG{+w}{    }\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{preorderRec}\PYG{p}{(}\PYG{n}{Node}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{root}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{root}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{nullptr}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{key}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} \PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n}{preorderRec}\PYG{p}{(}\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{);}
+\PYG{+w}{            }\PYG{n}{preorderRec}\PYG{p}{(}\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{);}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{c+c1}{// Рекурсивная функция для обхода дерева в порядке postorder}
+\PYG{+w}{    }\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{postorderRec}\PYG{p}{(}\PYG{n}{Node}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{root}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{root}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{nullptr}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{postorderRec}\PYG{p}{(}\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{);}
+\PYG{+w}{            }\PYG{n}{postorderRec}\PYG{p}{(}\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{);}
+\PYG{+w}{            }\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{n}{root}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{key}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} \PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{k}{public}\PYG{o}{:}
+\PYG{+w}{    }\PYG{n}{BinarySearchTree}\PYG{p}{()}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{n}{root}\PYG{p}{(}\PYG{k}{nullptr}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{c+c1}{// Метод для добавления узла в дерево}
+\PYG{+w}{    }\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n}{insert}\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{key}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{root}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{insertRec}\PYG{p}{(}\PYG{n}{root}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{key}\PYG{p}{);}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{c+c1}{// Метод для удаления узла из дерева}
+\PYG{+w}{    }\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n}{remove}\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{key}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{root}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{deleteRec}\PYG{p}{(}\PYG{n}{root}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{key}\PYG{p}{);}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{c+c1}{// Метод для поиска узла по ключу}
+\PYG{+w}{    }\PYG{n}{Node}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{search}\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{key}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{searchRec}\PYG{p}{(}\PYG{n}{root}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{key}\PYG{p}{);}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{c+c1}{// Метод для симметричного обхода дерева}
+\PYG{+w}{    }\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n}{inorder}\PYG{p}{()}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{inorderRec}\PYG{p}{(}\PYG{n}{root}\PYG{p}{);}
+\PYG{+w}{        }\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{n}{endl}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{c+c1}{// Метод для прямого обхода дерева}
+\PYG{+w}{    }\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n}{preorder}\PYG{p}{()}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{preorderRec}\PYG{p}{(}\PYG{n}{root}\PYG{p}{);}
+\PYG{+w}{        }\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{n}{endl}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{c+c1}{// Метод для обратного обхода дерева}
+\PYG{+w}{    }\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n}{postorder}\PYG{p}{()}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{postorderRec}\PYG{p}{(}\PYG{n}{root}\PYG{p}{);}
+\PYG{+w}{        }\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{n}{endl}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{};}
+
+\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n+nf}{main}\PYG{p}{()}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{n}{setlocale}\PYG{p}{(}\PYG{n}{LC\PYGZus{}ALL}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}RUS\PYGZdq{}}\PYG{p}{);}
+\PYG{+w}{    }\PYG{n}{srand}\PYG{p}{(}\PYG{n}{time}\PYG{p}{(}\PYG{n+nb}{NULL}\PYG{p}{));}
+
+\PYG{+w}{    }\PYG{n}{BinarySearchTree}\PYG{+w}{ }\PYG{n}{bst}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{n}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{10}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{while}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{n}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{x}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{rand}\PYG{p}{()}\PYG{+w}{ }\PYG{o}{\PYGZpc{}}\PYG{+w}{ }\PYG{l+m+mi}{20}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{bst}\PYG{p}{.}\PYG{n}{search}\PYG{p}{(}\PYG{n}{x}\PYG{p}{))}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{bst}\PYG{p}{.}\PYG{n}{insert}\PYG{p}{(}\PYG{n}{x}\PYG{p}{);}
+\PYG{+w}{            }\PYG{n}{n}\PYG{o}{\PYGZhy{}\PYGZhy{}}\PYG{p}{;}
+\PYG{+w}{            }\PYG{c+c1}{//cout \PYGZlt{}\PYGZlt{} x \PYGZlt{}\PYGZlt{} \PYGZdq{} \PYGZdq{};}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{c+c1}{//cout \PYGZlt{}\PYGZlt{} endl;}
+
+\PYG{+w}{    }\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Симметричный обход: \PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{bst}\PYG{p}{.}\PYG{n}{inorder}\PYG{p}{();}
+
+\PYG{+w}{    }\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Прямой обход: \PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{bst}\PYG{p}{.}\PYG{n}{preorder}\PYG{p}{();}
+
+\PYG{+w}{    }\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Обратный обход: \PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{bst}\PYG{p}{.}\PYG{n}{postorder}\PYG{p}{();}
+
+\PYG{+w}{    }\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Какой ключ хотите удалить?}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{\PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{a}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{cin}\PYG{+w}{ }\PYG{o}{\PYGZgt{}\PYGZgt{}}\PYG{+w}{ }\PYG{n}{a}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{bst}\PYG{p}{.}\PYG{n}{remove}\PYG{p}{(}\PYG{n}{a}\PYG{p}{);}
+\PYG{+w}{    }\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Симметричный обход после удаления \PYGZdq{}}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{n}{a}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} :\PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{bst}\PYG{p}{.}\PYG{n}{inorder}\PYG{p}{();}
+
+\PYG{+w}{    }\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Какой ключ хотите найти?}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{\PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{cin}\PYG{+w}{ }\PYG{o}{\PYGZgt{}\PYGZgt{}}\PYG{+w}{ }\PYG{n}{a}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{Node}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{searchResult}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{bst}\PYG{p}{.}\PYG{n}{search}\PYG{p}{(}\PYG{n}{a}\PYG{p}{);}
+\PYG{+w}{    }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{searchResult}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Узел с ключом \PYGZdq{}}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{n}{a}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} найден.\PYGZdq{}}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{n}{endl}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{k}{else}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Узел с ключом \PYGZdq{}}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{n}{a}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} не найден.\PYGZdq{}}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{n}{endl}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{return}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

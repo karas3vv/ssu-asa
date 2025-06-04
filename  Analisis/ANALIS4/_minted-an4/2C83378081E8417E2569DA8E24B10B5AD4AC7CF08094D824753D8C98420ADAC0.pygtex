@@ -1,0 +1,561 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZsh{}include}\PYG{+w}{ }\PYG{c+cpf}{\PYGZlt{}iostream\PYGZgt{}}
+\PYG{k}{using}\PYG{+w}{ }\PYG{k}{namespace}\PYG{+w}{ }\PYG{n+nn}{std}\PYG{p}{;}
+
+\PYG{k}{struct}\PYG{+w}{ }\PYG{n+nc}{tree}\PYG{+w}{ }\PYG{c+c1}{// Cтруктура дерева}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{inf}\PYG{p}{;}
+\PYG{+w}{	}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{left}\PYG{p}{;}
+\PYG{+w}{	}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{right}\PYG{p}{;}
+\PYG{+w}{	}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{parent}\PYG{p}{;}
+\PYG{+w}{	}\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n}{color}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// True \PYGZhy{} черный, False – красный}
+\PYG{p}{\PYGZcb{};}
+
+
+\PYG{c+c1}{// Повороты}
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{left\PYGZus{}rotate}\PYG{p}{(}\PYG{n}{tree}\PYG{o}{*\PYGZam{}}\PYG{+w}{ }\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// Левый}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{y}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// Y \PYGZhy{} правый ребенок X}
+\PYG{+w}{	}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{y}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// Левый ребенок Y становится правым ребенком X}
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{y}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// Если левый ребенок Y есть}
+\PYG{+w}{		}\PYG{n}{y}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// Родителем левого ребенка становится X}
+\PYG{+w}{	}\PYG{n}{y}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// Родитель для Y становится родитель X}
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{)}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// Eсли X левый ребенок}
+\PYG{+w}{			}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{y}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// Y становится левым ребенком для родителя X}
+\PYG{+w}{		}\PYG{k}{else}
+\PYG{+w}{			}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{y}\PYG{p}{;}\PYG{c+c1}{// Становится правым ребенком соответственно}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{n}{y}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// X становится левым ребенком Y}
+\PYG{+w}{	}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{y}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// Y становится родитем X}
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{y}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// Если у Y нет родителя}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{n}{tr}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{y}\PYG{p}{;}
+\PYG{+w}{		}\PYG{n}{y}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// Y становится корнем и окрашивается в черный цвет}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{right\PYGZus{}rotate}\PYG{p}{(}\PYG{n}{tree}\PYG{o}{*\PYGZam{}}\PYG{+w}{ }\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// правый поворот}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{y}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{;}
+\PYG{+w}{	}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{y}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{;}
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{y}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{)}
+\PYG{+w}{		}\PYG{n}{y}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{;}
+\PYG{+w}{	}\PYG{n}{y}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{;}
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{)}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{)}
+\PYG{+w}{			}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{y}\PYG{p}{;}
+\PYG{+w}{		}\PYG{k}{else}
+\PYG{+w}{			}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{y}\PYG{p}{;}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{n}{y}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{;}
+\PYG{+w}{	}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{y}\PYG{p}{;}
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{y}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{)}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{n}{tr}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{y}\PYG{p}{;}
+\PYG{+w}{		}\PYG{n}{y}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+c1}{// создание узлов}
+\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n+nf}{node}\PYG{p}{(}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{p}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// красный узел}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{n}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{tree}\PYG{p}{;}
+\PYG{+w}{	}\PYG{n}{n}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{inf}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{;}
+\PYG{+w}{	}\PYG{n}{n}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{p}\PYG{p}{;}
+\PYG{+w}{	}\PYG{n}{n}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{NULL}\PYG{p}{;}
+\PYG{+w}{	}\PYG{n}{n}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{NULL}\PYG{p}{;}
+\PYG{+w}{	}\PYG{n}{n}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{false}\PYG{p}{;}
+\PYG{+w}{	}\PYG{k}{return}\PYG{+w}{ }\PYG{n}{n}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n+nf}{root}\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// черный узел}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{n}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{tree}\PYG{p}{;}
+\PYG{+w}{	}\PYG{n}{n}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{inf}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{;}
+\PYG{+w}{	}\PYG{n}{n}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{NULL}\PYG{p}{;}
+\PYG{+w}{	}\PYG{n}{n}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{NULL}\PYG{p}{;}
+\PYG{+w}{	}\PYG{n}{n}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{NULL}\PYG{p}{;}
+\PYG{+w}{	}\PYG{n}{n}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}
+\PYG{+w}{	}\PYG{k}{return}\PYG{+w}{ }\PYG{n}{n}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n+nf}{grandparent}\PYG{p}{(}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// дедушка}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{)}
+\PYG{+w}{		}\PYG{k}{return}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{;}
+\PYG{+w}{	}\PYG{k}{else}
+\PYG{+w}{		}\PYG{k}{return}\PYG{+w}{ }\PYG{n+nb}{NULL}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n+nf}{uncle}\PYG{p}{(}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// дядя}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{g}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{grandparent}\PYG{p}{(}\PYG{n}{x}\PYG{p}{);}
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{g}\PYG{p}{)}
+\PYG{+w}{		}\PYG{k}{return}\PYG{+w}{ }\PYG{n+nb}{NULL}\PYG{p}{;}
+
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{g}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{)}
+\PYG{+w}{		}\PYG{k}{return}\PYG{+w}{ }\PYG{n}{g}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{;}
+\PYG{+w}{	}\PYG{k}{else}
+\PYG{+w}{		}\PYG{k}{return}\PYG{+w}{ }\PYG{n}{g}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+
+\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n+nf}{brother}\PYG{p}{(}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// брат}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{)}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}
+\PYG{+w}{			}\PYG{k}{return}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{;}
+\PYG{+w}{		}\PYG{k}{else}
+\PYG{+w}{			}\PYG{k}{return}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{;}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{k}{else}
+\PYG{+w}{		}\PYG{k}{return}\PYG{+w}{ }\PYG{n+nb}{NULL}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{preorder\PYGZus{}color}\PYG{p}{(}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{tr}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// прямой обход с цветами (К\PYGZhy{}Л\PYGZhy{}П)}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{tr}\PYG{p}{)}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{n}{tr}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{inf}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// корень}
+\PYG{+w}{		}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{tr}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{)}
+\PYG{+w}{			}\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} \PYGZhy{} b  \PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{		}\PYG{k}{else}
+\PYG{+w}{			}\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} \PYGZhy{} r  \PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{		}\PYG{n}{preorder\PYGZus{}color}\PYG{p}{(}\PYG{n}{tr}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// левый}
+\PYG{+w}{		}\PYG{n}{preorder\PYGZus{}color}\PYG{p}{(}\PYG{n}{tr}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// правый}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+c1}{// вставка}
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{insert\PYGZus{}case5}\PYG{p}{(}\PYG{n}{tree}\PYG{o}{*\PYGZam{}}\PYG{+w}{ }\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// Родитель красный, дядя, дед, брат и дети черные}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{G}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{grandparent}\PYG{p}{(}\PYG{n}{x}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// Дед}
+\PYG{+w}{	}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// Родитель становится черным}
+\PYG{+w}{	}\PYG{n}{G}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{false}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// Дед становится красным}
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{((}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{G}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{))}\PYG{+w}{ }\PYG{c+c1}{// Если Х \PYGZhy{} левый ребенок и родитель \PYGZhy{} левый ребенок, то правый поворот, иначе левый}
+\PYG{+w}{		}\PYG{n}{right\PYGZus{}rotate}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{G}\PYG{p}{);}
+\PYG{+w}{	}\PYG{k}{else}
+\PYG{+w}{		}\PYG{n}{left\PYGZus{}rotate}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{G}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{insert\PYGZus{}case4}\PYG{p}{(}\PYG{n}{tree}\PYG{o}{*\PYGZam{}}\PYG{+w}{ }\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// родитель красный, дядя черный}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{G}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{grandparent}\PYG{p}{(}\PYG{n}{x}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// Дед}
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{((}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{G}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{))}\PYG{+w}{ }\PYG{c+c1}{// Если Х \PYGZhy{} правый ребенок и родитель \PYGZhy{} левый ребенок}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{n}{left\PYGZus{}rotate}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// Левый поворот}
+\PYG{+w}{		}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// Переходим к левому ребенку}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{k}{else}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{((}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{G}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{))}\PYG{+w}{ }\PYG{c+c1}{// Иначе правый поворот}
+\PYG{+w}{		}\PYG{p}{\PYGZob{}}
+\PYG{+w}{			}\PYG{n}{right\PYGZus{}rotate}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{);}
+\PYG{+w}{			}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{;}
+\PYG{+w}{		}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{n}{insert\PYGZus{}case5}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{insert\PYGZus{}case3}\PYG{p}{(}\PYG{n}{tree}\PYG{o}{*\PYGZam{}}\PYG{+w}{ }\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// если родитель, Дядя и X \PYGZhy{} красные}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{U}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{uncle}\PYG{p}{(}\PYG{n}{x}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// дядя}
+\PYG{+w}{	}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{G}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{grandparent}\PYG{p}{(}\PYG{n}{x}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// дедушка}
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{U}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{U}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n+nb}{false}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n+nb}{false}\PYG{p}{)}\PYG{+w}{  }\PYG{c+c1}{// если дядя и родитель красные}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// родитель становится черным}
+\PYG{+w}{		}\PYG{n}{U}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// дядя становится черным}
+\PYG{+w}{		}\PYG{n}{G}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{false}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// дед \PYGZhy{} красным}
+
+\PYG{+w}{		}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{G}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// если у деда нет родителя \PYGZhy{} становится черным}
+\PYG{+w}{			}\PYG{n}{G}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}
+\PYG{+w}{		}\PYG{k}{else}
+\PYG{+w}{		}\PYG{p}{\PYGZob{}}
+\PYG{+w}{			}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{grandparent}\PYG{p}{(}\PYG{n}{G}\PYG{p}{))}\PYG{+w}{ }\PYG{c+c1}{// если у деда есть дед}
+\PYG{+w}{				}\PYG{n}{insert\PYGZus{}case3}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{G}\PYG{p}{);}
+\PYG{+w}{			}\PYG{k}{else}
+\PYG{+w}{				}\PYG{k}{return}\PYG{p}{;}
+\PYG{+w}{		}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{k}{else}
+\PYG{+w}{		}\PYG{n}{insert\PYGZus{}case4}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{insert\PYGZus{}case2}\PYG{p}{(}\PYG{n}{tree}\PYG{o}{*\PYGZam{}}\PYG{+w}{ }\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// если родитель х \PYGZhy{} красный, то переходим к 3 случаю}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n+nb}{false}\PYG{p}{)}
+\PYG{+w}{		}\PYG{n}{insert\PYGZus{}case3}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{);}
+\PYG{+w}{	}\PYG{k}{else}
+\PYG{+w}{		}\PYG{k}{return}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{insert\PYGZus{}case1}\PYG{p}{(}\PYG{n}{tree}\PYG{o}{*\PYGZam{}}\PYG{+w}{ }\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// если узел \PYGZhy{} корень}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{)}
+\PYG{+w}{		}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// становится черным}
+\PYG{+w}{	}\PYG{k}{else}
+\PYG{+w}{		}\PYG{n}{insert\PYGZus{}case2}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{insert}\PYG{p}{(}\PYG{n}{tree}\PYG{o}{*\PYGZam{}}\PYG{+w}{ }\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{prev}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// Prev \PYGZhy{} предыдущий узел}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{((}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{prev}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{inf}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{prev}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{))}\PYG{+w}{ }\PYG{c+c1}{// Если Х меньше предыдущего и у него нет левого ребенка}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{n}{prev}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{node}\PYG{p}{(}\PYG{n}{prev}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// Становится левым ребенком prev}
+\PYG{+w}{		}\PYG{n}{insert\PYGZus{}case1}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{prev}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{);}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{k}{else}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{((}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{prev}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{inf}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{prev}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{))}\PYG{+w}{ }\PYG{c+c1}{// Если Х больше предыдущего и у него нет правого ребенка}
+\PYG{+w}{		}\PYG{p}{\PYGZob{}}
+\PYG{+w}{			}\PYG{n}{prev}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{node}\PYG{p}{(}\PYG{n}{prev}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// Становится правым ребенком prev}
+\PYG{+w}{			}\PYG{n}{insert\PYGZus{}case1}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{prev}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{);}
+\PYG{+w}{		}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{		}\PYG{k}{else}
+\PYG{+w}{		}\PYG{p}{\PYGZob{}}
+\PYG{+w}{			}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{((}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{prev}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{inf}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{prev}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{))}\PYG{+w}{ }\PYG{c+c1}{// Если меньше(больше) и есть левый(правый) ребенок, идем дальше по дереву}
+\PYG{+w}{				}\PYG{n}{insert}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{prev}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{);}
+\PYG{+w}{			}\PYG{k}{else}
+\PYG{+w}{			}\PYG{p}{\PYGZob{}}
+\PYG{+w}{				}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{((}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{prev}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{inf}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{prev}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{))}
+\PYG{+w}{				}\PYG{p}{\PYGZob{}}
+\PYG{+w}{					}\PYG{n}{insert}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{prev}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{);}
+\PYG{+w}{				}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{			}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{		}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+c1}{// удаление}
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{del\PYGZus{}element6}\PYG{p}{(}\PYG{n}{tree}\PYG{o}{*\PYGZam{}}\PYG{+w}{ }\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// брат, близкий племянник \PYGZhy{} черные, дальний племянник \PYGZhy{} красный, а его дети \PYGZhy{} черные}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{B}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{brother}\PYG{p}{(}\PYG{n}{x}\PYG{p}{);}
+
+\PYG{+w}{	}\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// брат становится того же цвета, что и родитель}
+\PYG{+w}{	}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// родитель становится черным}
+
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{)}\PYG{+w}{  }\PYG{c+c1}{// если Х \PYGZhy{} левый ребенок}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// правый племянник становится черным}
+\PYG{+w}{		}\PYG{n}{left\PYGZus{}rotate}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// левый поворот}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{k}{else}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// левый племянник становится черным}
+\PYG{+w}{		}\PYG{n}{right\PYGZus{}rotate}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// правый поворот}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{del\PYGZus{}element5}\PYG{p}{(}\PYG{n}{tree}\PYG{o}{*\PYGZam{}}\PYG{+w}{ }\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// брат, дальний племянник \PYGZhy{} черные, близкий племянник \PYGZhy{} красный, а его дети \PYGZhy{} черные}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{B}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{brother}\PYG{p}{(}\PYG{n}{x}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// брат}
+
+\PYG{+w}{	}\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n}{col\PYGZus{}l}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// цвет левого племянника}
+\PYG{+w}{	}\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n}{col\PYGZus{}r}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// цвет правого племянника}
+
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{)}
+\PYG{+w}{		}\PYG{n}{col\PYGZus{}l}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}
+\PYG{+w}{	}\PYG{k}{else}
+\PYG{+w}{		}\PYG{n}{col\PYGZus{}l}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{p}{;}
+
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{)}
+\PYG{+w}{		}\PYG{n}{col\PYGZus{}r}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}
+\PYG{+w}{	}\PYG{k}{else}
+\PYG{+w}{		}\PYG{n}{col\PYGZus{}r}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{p}{;}
+
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{col\PYGZus{}l}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n+nb}{false}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{col\PYGZus{}r}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// если Х \PYGZhy{} левый ребенок, левый племянник \PYGZhy{} красный, а правый \PYGZhy{} черный}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{false}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// брат становится красным}
+\PYG{+w}{		}\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// левый племянник становится черным}
+\PYG{+w}{		}\PYG{n}{right\PYGZus{}rotate}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{B}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// правый поврот}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{k}{else}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{col\PYGZus{}l}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{col\PYGZus{}r}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n+nb}{false}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// Если Х \PYGZhy{} правый ребенок, левый племянник \PYGZhy{} черный, а правый \PYGZhy{} красный}
+\PYG{+w}{		}\PYG{p}{\PYGZob{}}
+\PYG{+w}{			}\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{false}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// брат становится красным}
+\PYG{+w}{			}\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// правый племянник становится черным}
+\PYG{+w}{			}\PYG{n}{left\PYGZus{}rotate}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{B}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// левый поворот}
+\PYG{+w}{		}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{n}{del\PYGZus{}element6}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{del\PYGZus{}element4}\PYG{p}{(}\PYG{n}{tree}\PYG{o}{*\PYGZam{}}\PYG{+w}{ }\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// Х, брат, племянники \PYGZhy{} черные, родитель красный}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{B}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{brother}\PYG{p}{(}\PYG{n}{x}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// брат}
+
+\PYG{+w}{	}\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n}{col\PYGZus{}l}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// цвет л племянника}
+\PYG{+w}{	}\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n}{col\PYGZus{}r}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// цвет п племянника}
+
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{)}
+\PYG{+w}{		}\PYG{n}{col\PYGZus{}l}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}
+\PYG{+w}{	}\PYG{k}{else}
+\PYG{+w}{		}\PYG{n}{col\PYGZus{}l}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{p}{;}
+
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{)}
+\PYG{+w}{		}\PYG{n}{col\PYGZus{}r}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}
+\PYG{+w}{	}\PYG{k}{else}
+\PYG{+w}{		}\PYG{n}{col\PYGZus{}r}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{p}{;}
+
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n+nb}{false}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{col\PYGZus{}l}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{col\PYGZus{}r}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// Если родитель \PYGZhy{} красный, а брат и племянники \PYGZhy{} черные}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{false}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// брат становится красным}
+\PYG{+w}{		}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// родитель становится черным}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{k}{else}
+\PYG{+w}{		}\PYG{n}{del\PYGZus{}element5}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{del\PYGZus{}element3}\PYG{p}{(}\PYG{n}{tree}\PYG{o}{*\PYGZam{}}\PYG{+w}{ }\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// Х, родитель, брат, племянники \PYGZhy{} черные}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{B}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{brother}\PYG{p}{(}\PYG{n}{x}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// брат}
+
+\PYG{+w}{	}\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n}{col\PYGZus{}l}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// цвет л племянника}
+\PYG{+w}{	}\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n}{col\PYGZus{}r}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// цвет п племянника}
+
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{)}
+\PYG{+w}{		}\PYG{n}{col\PYGZus{}l}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}
+\PYG{+w}{	}\PYG{k}{else}
+\PYG{+w}{		}\PYG{n}{col\PYGZus{}l}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{p}{;}
+
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{)}
+\PYG{+w}{		}\PYG{n}{col\PYGZus{}r}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}
+\PYG{+w}{	}\PYG{k}{else}
+\PYG{+w}{		}\PYG{n}{col\PYGZus{}r}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{p}{;}
+
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{col\PYGZus{}l}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{col\PYGZus{}r}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// Если родитель, брат и племянники \PYGZhy{} черные}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{false}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// брат становится красным}
+
+\PYG{+w}{		}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// если Х \PYGZhy{} корень}
+\PYG{+w}{		}\PYG{p}{\PYGZob{}}
+\PYG{+w}{			}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{)}
+\PYG{+w}{				}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// если есть левый ребенок \PYGZhy{} он черный}
+\PYG{+w}{			}\PYG{k}{else}
+\PYG{+w}{			}\PYG{p}{\PYGZob{}}
+\PYG{+w}{				}\PYG{n}{tr}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{;}
+\PYG{+w}{				}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}
+\PYG{+w}{			}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{		}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{		}\PYG{k}{else}
+\PYG{+w}{		}\PYG{p}{\PYGZob{}}
+\PYG{+w}{			}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{B}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{brother}\PYG{p}{(}\PYG{n}{x}\PYG{p}{);}
+\PYG{+w}{			}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n+nb}{false}\PYG{p}{)}
+\PYG{+w}{			}\PYG{p}{\PYGZob{}}
+\PYG{+w}{				}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{false}\PYG{p}{;}
+\PYG{+w}{				}\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}
+\PYG{+w}{				}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{)}
+\PYG{+w}{					}\PYG{n}{left\PYGZus{}rotate}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{);}
+\PYG{+w}{				}\PYG{k}{else}
+\PYG{+w}{					}\PYG{n}{right\PYGZus{}rotate}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{);}
+\PYG{+w}{			}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{			}\PYG{n}{del\PYGZus{}element3}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{);}
+\PYG{+w}{		}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{k}{else}
+\PYG{+w}{		}\PYG{n}{del\PYGZus{}element4}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{del\PYGZus{}element2}\PYG{p}{(}\PYG{n}{tree}\PYG{o}{*\PYGZam{}}\PYG{+w}{ }\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// х \PYGZhy{} черный, родитель черный, брат красный}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{B}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{brother}\PYG{p}{(}\PYG{n}{x}\PYG{p}{);}
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n+nb}{false}\PYG{p}{)}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{false}\PYG{p}{;}
+\PYG{+w}{		}\PYG{n}{B}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}
+\PYG{+w}{		}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{)}
+\PYG{+w}{			}\PYG{n}{left\PYGZus{}rotate}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{);}
+\PYG{+w}{		}\PYG{k}{else}
+\PYG{+w}{			}\PYG{n}{right\PYGZus{}rotate}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{);}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{n}{del\PYGZus{}element3}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{del\PYGZus{}element1}\PYG{p}{(}\PYG{n}{tree}\PYG{o}{*\PYGZam{}}\PYG{+w}{ }\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// x \PYGZhy{} корень дерева, одна ветка}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{)}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{)}
+\PYG{+w}{			}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}
+\PYG{+w}{		}\PYG{k}{else}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{			}\PYG{n}{tr}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{;}
+\PYG{+w}{			}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}
+\PYG{+w}{		}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{k}{else}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{n}{del\PYGZus{}element2}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{);}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{replace}\PYG{p}{(}\PYG{n}{tree}\PYG{o}{*\PYGZam{}}\PYG{+w}{ }\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// случай когда удаляем x с одним ребенком}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{)}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{)}
+\PYG{+w}{		}\PYG{p}{\PYGZob{}}
+\PYG{+w}{			}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{ch}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{;}
+\PYG{+w}{			}\PYG{n}{ch}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{;}
+\PYG{+w}{			}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{)}
+\PYG{+w}{				}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{ch}\PYG{p}{;}
+\PYG{+w}{			}\PYG{k}{else}
+\PYG{+w}{				}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{ch}\PYG{p}{;}
+\PYG{+w}{		}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{k}{else}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{)}
+\PYG{+w}{		}\PYG{p}{\PYGZob{}}
+\PYG{+w}{			}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{ch}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{;}
+\PYG{+w}{			}\PYG{n}{ch}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{p}{;}
+\PYG{+w}{			}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{)}
+\PYG{+w}{				}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{ch}\PYG{p}{;}
+\PYG{+w}{			}\PYG{k}{else}
+\PYG{+w}{				}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{ch}\PYG{p}{;}
+\PYG{+w}{		}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n+nf}{Max\PYGZus{}par}\PYG{p}{(}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{tr}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{tr}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{)}
+\PYG{+w}{		}\PYG{k}{return}\PYG{+w}{ }\PYG{n}{tr}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// нет правого ребенка}
+\PYG{+w}{	}\PYG{k}{else}
+\PYG{+w}{		}\PYG{k}{return}\PYG{+w}{ }\PYG{n}{Max\PYGZus{}par}\PYG{p}{(}\PYG{n}{tr}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// идем по правой ветке до конца}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{delete\PYGZus{}one}\PYG{p}{(}\PYG{n}{tree}\PYG{o}{*\PYGZam{}}\PYG{+w}{ }\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// удаление}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{buf}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{NULL}\PYG{p}{;}
+
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// есть два ребенка}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+
+\PYG{+w}{		}\PYG{n}{buf}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Max\PYGZus{}par}\PYG{p}{(}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// предыдущий по значению элемент}
+
+\PYG{+w}{		}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{tpm}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{inf}\PYG{p}{;}
+\PYG{+w}{		}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{inf}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{buf}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{inf}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// меняем местами с предыдущим по значению элементом}
+\PYG{+w}{		}\PYG{n}{buf}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{inf}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{tpm}\PYG{p}{;}
+
+\PYG{+w}{		}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{buf}\PYG{p}{;}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{+w}{ }\PYG{o}{||}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// есть один ребенок}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{ch}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{NULL}\PYG{p}{;}
+\PYG{+w}{		}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{o}{!}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{)}
+\PYG{+w}{			}\PYG{n}{ch}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{;}
+\PYG{+w}{		}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{o}{!}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{)}
+\PYG{+w}{			}\PYG{n}{ch}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{;}
+
+\PYG{+w}{		}\PYG{n}{replace}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{);}
+\PYG{+w}{		}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// если удаляемый элемент был красным то тот, что на его месте перекрашиваем в красный (если нужно)}
+\PYG{+w}{		}\PYG{p}{\PYGZob{}}
+\PYG{+w}{			}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{ch}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n+nb}{false}\PYG{p}{)}
+\PYG{+w}{				}\PYG{n}{ch}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{;}
+\PYG{+w}{			}\PYG{k}{else}
+\PYG{+w}{				}\PYG{n}{del\PYGZus{}element1}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{);}
+\PYG{+w}{		}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{k}{else}\PYG{+w}{ }\PYG{c+c1}{// нет детей}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{o}{!}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{)}
+\PYG{+w}{		}\PYG{p}{\PYGZob{}}
+\PYG{+w}{			}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{color}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{				}\PYG{n}{del\PYGZus{}element1}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{);}
+\PYG{+w}{			}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{			}\PYG{k}{else}
+\PYG{+w}{			}\PYG{p}{\PYGZob{}}
+\PYG{+w}{				}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{)}
+\PYG{+w}{					}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{NULL}\PYG{p}{;}
+\PYG{+w}{				}\PYG{k}{else}
+\PYG{+w}{					}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{NULL}\PYG{p}{;}
+\PYG{+w}{			}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{		}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{o}{!}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{)}
+\PYG{+w}{	}\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{)}
+\PYG{+w}{			}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{NULL}\PYG{p}{;}
+\PYG{+w}{		}\PYG{k}{else}
+\PYG{+w}{		}\PYG{p}{\PYGZob{}}
+\PYG{+w}{			}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{)}
+\PYG{+w}{				}\PYG{n}{x}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{parent}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{NULL}\PYG{p}{;}
+\PYG{+w}{		}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{	}\PYG{k}{delete}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n+nf}{find}\PYG{p}{(}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// поиск}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{tr}\PYG{+w}{ }\PYG{o}{||}\PYG{+w}{ }\PYG{n}{x}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{tr}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{inf}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// нашли или дошли до конца ветки}
+\PYG{+w}{		}\PYG{k}{return}\PYG{+w}{ }\PYG{n}{tr}\PYG{p}{;}
+\PYG{+w}{	}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{tr}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{inf}\PYG{p}{)}
+\PYG{+w}{		}\PYG{k}{return}\PYG{+w}{ }\PYG{n}{find}\PYG{p}{(}\PYG{n}{tr}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{left}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// ищем по левой ветке}
+\PYG{+w}{	}\PYG{k}{else}
+\PYG{+w}{		}\PYG{k}{return}\PYG{+w}{ }\PYG{n}{find}\PYG{p}{(}\PYG{n}{tr}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{right}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// ищем по правой ветке}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n+nf}{main}\PYG{p}{()}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{	}\PYG{n}{setlocale}\PYG{p}{(}\PYG{n}{LC\PYGZus{}ALL}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Russian\PYGZdq{}}\PYG{p}{);}
+
+\PYG{+w}{	}\PYG{n}{tree}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{tr}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nb}{NULL}\PYG{p}{;}
+
+\PYG{+w}{	}\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Введите количество элементов: }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{\PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{	}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{n}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{cin}\PYG{+w}{ }\PYG{o}{\PYGZgt{}\PYGZgt{}}\PYG{+w}{ }\PYG{n}{n}\PYG{p}{;}
+
+\PYG{+w}{	}\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Введите элементы: }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{\PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{	}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{cin}\PYG{+w}{ }\PYG{o}{\PYGZgt{}\PYGZgt{}}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{;}
+\PYG{+w}{	}\PYG{n}{tr}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{root}\PYG{p}{(}\PYG{n}{x}\PYG{p}{);}
+\PYG{+w}{	}\PYG{k}{for}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{n}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{;}\PYG{+w}{ }\PYG{o}{++}\PYG{n}{i}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{n}{cin}\PYG{+w}{ }\PYG{o}{\PYGZgt{}\PYGZgt{}}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{;}
+\PYG{+w}{		}\PYG{n}{insert}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{);}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{	}\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Прямой обход: \PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{	}\PYG{n}{preorder\PYGZus{}color}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{);}
+\PYG{+w}{	}\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{n}{endl}\PYG{p}{;}
+
+\PYG{+w}{	}\PYG{k}{for}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{o}{++}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Введите элемент для удаления: \PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{		}\PYG{n}{cin}\PYG{+w}{ }\PYG{o}{\PYGZgt{}\PYGZgt{}}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{;}
+\PYG{+w}{		}\PYG{n}{delete\PYGZus{}one}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{find}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{));}
+\PYG{+w}{		}\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{n}{endl}\PYG{p}{;}
+
+\PYG{+w}{		}\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Прямой обход: \PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{		}\PYG{n}{preorder\PYGZus{}color}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{);}
+\PYG{+w}{		}\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{n}{endl}\PYG{p}{;}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+
+
+\PYG{+w}{	}\PYG{k}{for}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{o}{++}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{		}\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Введите элемент для удаления: \PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{		}\PYG{n}{cin}\PYG{+w}{ }\PYG{o}{\PYGZgt{}\PYGZgt{}}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{;}
+\PYG{+w}{		}\PYG{n}{delete\PYGZus{}one}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{find}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{));}
+\PYG{+w}{		}\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{n}{endl}\PYG{p}{;}
+
+\PYG{+w}{		}\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Прямой обход: \PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{		}\PYG{n}{preorder\PYGZus{}color}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{);}
+\PYG{+w}{		}\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{n}{endl}\PYG{p}{;}
+\PYG{+w}{	}\PYG{p}{\PYGZcb{}}
+
+
+
+\PYG{+w}{	}\PYG{c+c1}{// Ввод нового элемента}
+\PYG{+w}{	}\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Введите элемент для вставки: \PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{	}\PYG{n}{cin}\PYG{+w}{ }\PYG{o}{\PYGZgt{}\PYGZgt{}}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{;}
+\PYG{+w}{	}\PYG{n}{insert}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{tr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// Вставляем введенный элемент}
+
+\PYG{+w}{	}\PYG{c+c1}{// Вывод дерева после вставки}
+\PYG{+w}{	}\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Прямой обход после вставки нового элемента: \PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{	}\PYG{n}{preorder\PYGZus{}color}\PYG{p}{(}\PYG{n}{tr}\PYG{p}{);}
+\PYG{+w}{	}\PYG{n}{cout}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{+w}{ }\PYG{n}{endl}\PYG{p}{;}
+
+\PYG{+w}{	}\PYG{k}{return}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

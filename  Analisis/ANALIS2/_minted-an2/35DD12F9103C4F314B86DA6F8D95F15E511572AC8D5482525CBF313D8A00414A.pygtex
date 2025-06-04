@@ -1,0 +1,40 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{heap}\PYG{p}{(}\PYG{n}{vector}\PYG{o}{\PYGZlt{}}\PYG{k+kt}{int}\PYG{o}{\PYGZgt{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{c}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{i}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{n}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{c+c1}{// сложность o(log n)}
+\PYG{+w}{    }\PYG{c+c1}{// предполагаем, что текущий элемент \PYGZhy{} максимальный}
+\PYG{+w}{    }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{ind\PYGZus{}mx}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{i}\PYG{p}{;}
+\PYG{+w}{    }\PYG{c+c1}{// проверяем левого потомка}
+\PYG{+w}{    }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{i}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{n}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{c+c1}{// если левый потомок больше текущего максимума}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{c}\PYG{p}{[}\PYG{n}{ind\PYGZus{}mx}\PYG{p}{]}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{c}\PYG{p}{[}\PYG{n}{i}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{])}
+\PYG{+w}{            }\PYG{n}{ind\PYGZus{}mx}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{c+c1}{// проверяем правого потомка}
+\PYG{+w}{    }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{i}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{n}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{c+c1}{// если правый потомок больше текущего максимума}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{c}\PYG{p}{[}\PYG{n}{ind\PYGZus{}mx}\PYG{p}{]}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{c}\PYG{p}{[}\PYG{n}{i}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{p}{])}
+\PYG{+w}{            }\PYG{n}{ind\PYGZus{}mx}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{c+c1}{// если максимум изменился}
+\PYG{+w}{    }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{ind\PYGZus{}mx}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{n}{i}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{c+c1}{// меняем местами текущий элемент с максимальным потомком}
+\PYG{+w}{        }\PYG{n}{swap}\PYG{p}{(}\PYG{n}{c}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],}\PYG{+w}{ }\PYG{n}{c}\PYG{p}{[}\PYG{n}{ind\PYGZus{}mx}\PYG{p}{]);}
+\PYG{+w}{        }\PYG{c+c1}{// рекурсивно вызываем heap для поддерева}
+\PYG{+w}{        }\PYG{n}{heap}\PYG{p}{(}\PYG{n}{c}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{ind\PYGZus{}mx}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{n}\PYG{p}{);}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+c1}{// функция пирамидальной сортировки (heapsort)}
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{pyramid\PYGZus{}sort}\PYG{p}{(}\PYG{n}{vector}\PYG{o}{\PYGZlt{}}\PYG{k+kt}{int}\PYG{o}{\PYGZgt{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{c}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{n}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{c+c1}{// построение max\PYGZhy{}heap (начиная с последнего нелистового узла)}
+\PYG{+w}{    }\PYG{k}{for}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{n}\PYG{+w}{ }\PYG{o}{/}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{\PYGZgt{}=}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{o}{\PYGZhy{}\PYGZhy{}}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// сложность o(n)}
+\PYG{+w}{        }\PYG{n}{heap}\PYG{p}{(}\PYG{n}{c}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{i}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{n}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// сложность o(log n)}
+
+\PYG{+w}{    }\PYG{c+c1}{// извлечение элементов из кучи по одному}
+\PYG{+w}{    }\PYG{k}{for}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{n}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{\PYGZgt{}=}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{o}{\PYGZhy{}\PYGZhy{}}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{c+c1}{// сложность o(n)}
+\PYG{+w}{        }\PYG{c+c1}{// перемещаем текущий корень в конец}
+\PYG{+w}{        }\PYG{n}{swap}\PYG{p}{(}\PYG{n}{c}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],}\PYG{+w}{ }\PYG{n}{c}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]);}\PYG{+w}{ }\PYG{c+c1}{// сложность o(1)}
+\PYG{+w}{        }\PYG{c+c1}{// восстанавливаем max\PYGZhy{}heap для уменьшенной кучи}
+\PYG{+w}{        }\PYG{n}{heap}\PYG{p}{(}\PYG{n}{c}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{i}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// сложность o(log n)}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

@@ -1,0 +1,61 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// функция для определения максимального кол\PYGZhy{}ва}
+\PYG{c+c1}{// разрядов в числах вектора}
+\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n+nf}{k}\PYG{p}{(}\PYG{n}{vector}\PYG{o}{\PYGZlt{}}\PYG{k+kt}{int}\PYG{o}{\PYGZgt{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{vec}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{retK}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// переменная для хранения максимального}
+\PYG{+w}{	}\PYG{c+c1}{// кол\PYGZhy{}ва разрядов}
+
+\PYG{+w}{    }\PYG{c+c1}{// перебираем все числа в векторе}
+\PYG{+w}{    }\PYG{k}{for}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{n}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{n}{vec}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{cnt}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// счетчик разрядов текущего числа}
+
+\PYG{+w}{        }\PYG{c+c1}{// особый случай для числа 0 (у него 1 разряд)}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{n}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{)\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{cnt}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}\PYG{+w}{ }\PYG{k}{else}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{cnt}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{c+c1}{// считаем кол\PYGZhy{}во разрядов в числе}
+\PYG{+w}{        }\PYG{k}{while}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{n}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{n}\PYG{+w}{ }\PYG{o}{/=}\PYG{+w}{ }\PYG{l+m+mi}{10}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// удаляем младший разряд}
+\PYG{+w}{            }\PYG{n}{cnt}\PYG{o}{++}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{c+c1}{// обновляем максимальное кол\PYGZhy{}во разрядов,}
+\PYG{+w}{		}\PYG{c+c1}{// если текущее число имеет больше разрядов}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{cnt}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{retK}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{retK}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{cnt}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{retK}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+c1}{// функция поразрядной сортировки (LSD \PYGZhy{} Least Significant Digit)}
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{radixSort}\PYG{p}{(}\PYG{n}{std}\PYG{o}{::}\PYG{n}{vector}\PYG{o}{\PYGZlt{}}\PYG{k+kt}{int}\PYG{o}{\PYGZgt{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{vec}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{dig}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{k}\PYG{p}{(}\PYG{n}{vec}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// получаем максимальное кол\PYGZhy{}во разрядов}
+\PYG{+w}{    }\PYG{n}{vector}\PYG{o}{\PYGZlt{}}\PYG{n}{vector}\PYG{o}{\PYGZlt{}}\PYG{k+kt}{int}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{p}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// вектор векторов для цифр от 0 до 9}
+
+\PYG{+w}{    }\PYG{c+c1}{// проходим по всем разрядам, начиная с младшего}
+\PYG{+w}{    }\PYG{k}{for}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{dig}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{o}{++}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{c+c1}{// распределяем числа по корзинам в}
+\PYG{+w}{		}\PYG{c+c1}{// соответствии с текущей цифрой}
+\PYG{+w}{        }\PYG{k}{for}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{j}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{j}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{vec}\PYG{p}{.}\PYG{n}{size}\PYG{p}{();}\PYG{+w}{ }\PYG{n}{j}\PYG{o}{++}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{c+c1}{// вычисляем текущую цифру (i\PYGZhy{}й разряд числа)}
+\PYG{+w}{            }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{dig\PYGZus{}cnt}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{abs}\PYG{p}{(}\PYG{n}{vec}\PYG{p}{[}\PYG{n}{j}\PYG{p}{])}\PYG{+w}{ }\PYG{o}{/}\PYG{+w}{ }\PYG{k}{static\PYGZus{}cast}\PYG{o}{\PYGZlt{}}\PYG{k+kt}{int}\PYG{o}{\PYGZgt{}}\PYG{p}{(}\PYG{n}{pow}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{,}\PYG{n}{i}\PYG{p}{))}\PYG{+w}{ }\PYG{o}{\PYGZpc{}}\PYG{+w}{ }\PYG{l+m+mi}{10}\PYG{p}{);}
+\PYG{+w}{            }\PYG{n}{p}\PYG{p}{[}\PYG{n}{dig\PYGZus{}cnt}\PYG{p}{].}\PYG{n}{push\PYGZus{}back}\PYG{p}{(}\PYG{n}{vec}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]);}\PYG{+w}{ }\PYG{c+c1}{// помещаем число в}
+\PYG{+w}{			}\PYG{c+c1}{// соответствующую корзину}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{c+c1}{// собираем числа из корзин обратно в исходный вектор}
+\PYG{+w}{        }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{ind}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// индекс для вставки в исходный вектор}
+\PYG{+w}{        }\PYG{k}{for}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{l+m+mi}{10}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{o}{++}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k}{for}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{n}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{n}{p}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{vec}\PYG{p}{[}\PYG{n}{ind}\PYG{o}{++}\PYG{p}{]}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{n}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// последовательно берем}
+\PYG{+w}{				}\PYG{c+c1}{// числа из всех корзин}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{            }\PYG{n}{p}\PYG{p}{[}\PYG{n}{i}\PYG{p}{].}\PYG{n}{clear}\PYG{p}{();}\PYG{+w}{ }\PYG{c+c1}{// очищаем корзину для следующего разряда}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

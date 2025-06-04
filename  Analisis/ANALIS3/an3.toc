@@ -1,0 +1,24 @@
+\babel@toc {russian}{}\relax 
+\contentsline {section}{\numberline {1}Пример программы}{3}{section.1}%
+\contentsline {section}{\numberline {2}Анализ случаев двоичного дерева}{9}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Лучший случай}{9}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Худший случай}{9}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Средний случай}{9}{subsection.2.3}%
+\contentsline {section}{\numberline {3}Поиск в двоичном дереве}{10}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Лучший случай}{10}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Худший случай}{10}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Средний случай}{10}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Вставка в двоичном дереве}{11}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Лучший случай}{11}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Худший случай}{11}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Средний случай}{11}{subsection.4.3}%
+\contentsline {section}{\numberline {5}Удаление в двоичном дереве}{12}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Лучший случай}{12}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Худший случай}{12}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Средний случай}{12}{subsection.5.3}%
+\contentsline {section}{\numberline {6}Обходы дерева}{13}{section.6}%
+\contentsline {section}{\numberline {7}Расход памяти}{14}{section.7}%
+\redeflsection 
+\ttl@change@i {\@ne }{section}{3ex}{\hspace {-3ex}}{\appendixname ~\thecontentslabel \hspace {2ex}}{\hspace {2.3em}}{\titlerule *[0.98ex]{.}\contentspage }\relax 
+\ttl@change@v {section}{}{}{}\relax 
+\contentsfinish 
