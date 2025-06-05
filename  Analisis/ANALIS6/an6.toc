@@ -1,0 +1,8 @@
+\babel@toc {russian}{}\relax 
+\contentsline {section}{\numberline {1}Префикс-функция}{3}{section.1}%
+\contentsline {section}{\numberline {2}Z-функция}{4}{section.2}%
+\contentsline {section}{\numberline {3}Алгоритм Кнута-Морриса Пратта (КМП)}{5}{section.3}%
+\redeflsection 
+\ttl@change@i {\@ne }{section}{3ex}{\hspace {-3ex}}{\appendixname ~\thecontentslabel \hspace {2ex}}{\hspace {2.3em}}{\titlerule *[0.98ex]{.}\contentspage }\relax 
+\ttl@change@v {section}{}{}{}\relax 
+\contentsfinish 
