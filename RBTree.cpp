@@ -1,339 +1,290 @@
 #include <iostream>
 using namespace std;
 
-// перечисление для цветов узлов в красно-черном дереве
 enum Color { RED, BLACK };
 
-// шаблон класса для красно-черного дерева
-template <typename T> class RedBlackTree {
+template <typename T>
+class RedBlackTree {
 private:
-    // структура для узла
     struct Node {
-        T data;         // данные узла
-        Color color;    // цвет узла (RED или BLACK)
-        Node* parent;   // указатель на родителя
-        Node* left;     // указатель на левого потомка
-        Node* right;    // указатель на правого потомка
+        T data;
+        Color color;
+        Node* parent;
+        Node* left;
+        Node* right;
 
-        // конструктор для инициализации узла с данными и цветом
-        Node(T value)
-            : data(value)
-            , color(RED)    // новые узлы всегда красные
-            , parent(nullptr)
-            , left(nullptr)
-            , right(nullptr)
-        {
-        }
+        Node(T value) : data(value), color(RED), parent(nullptr), left(nullptr), right(nullptr) {}
     };
 
-    Node* root; // корень красно-черного дерева
+    Node* root;
+    Node* NIL;
 
-    // вспомогательная функция: левый поворот
-    void rotateLeft(Node*& node)
-    {
-        Node* child = node->right;   // правый потомок становится новым корнем
-        node->right = child->left;   // левое поддерево потомка становится правым поддеревом узла
-        if (node->right != nullptr)
-            node->right->parent = node;  // обновляем родителя для перенесенного поддерева
-        child->parent = node->parent;   // переносим родителя узла в потомка
-        if (node->parent == nullptr)
-            root = child;           // если узел был корнем, теперь корень - потомок
-        else if (node == node->parent->left)
-            node->parent->left = child; // обновляем ссылку родителя на потомка
+    void leftRotate(Node* x) {
+        Node* y = x->right;
+        x->right = y->left;
+        if (y->left != NIL)
+            y->left->parent = x;
+
+        y->parent = x->parent;
+        if (x->parent == NIL)
+            root = y;
+        else if (x == x->parent->left)
+            x->parent->left = y;
         else
-            node->parent->right = child;
-        child->left = node;        // делаем узел левым потомком
-        node->parent = child;      // обновляем родителя узла
+            x->parent->right = y;
+
+        y->left = x;
+        x->parent = y;
     }
 
-    // вспомогательная функция: правый поворот (аналогично левому)
-    void rotateRight(Node*& node)
-    {
-        Node* child = node->left;
-        node->left = child->right;
-        if (node->left != nullptr)
-            node->left->parent = node;
-        child->parent = node->parent;
-        if (node->parent == nullptr)
-            root = child;
-        else if (node == node->parent->left)
-            node->parent->left = child;
+    void rightRotate(Node* x) {
+        Node* y = x->left;
+        x->left = y->right;
+        if (y->right != NIL)
+            y->right->parent = x;
+
+        y->parent = x->parent;
+        if (x->parent == NIL)
+            root = y;
+        else if (x == x->parent->right)
+            x->parent->right = y;
         else
-            node->parent->right = child;
-        child->right = node;
-        node->parent = child;
+            x->parent->left = y;
+
+        y->right = x;
+        x->parent = y;
     }
 
-    // вспомогательная функция: исправление нарушений при вставке
-    void fixInsert(Node*& node)
-    {
-        Node* parent = nullptr;
-        Node* grandparent = nullptr;
-        while (node != root && node->color == RED
-               && node->parent->color == RED) {
-            parent = node->parent;
-            grandparent = parent->parent;
-            if (parent == grandparent->left) {  // если родитель - левый потомок
-                Node* uncle = grandparent->right;
-                if (uncle != nullptr && uncle->color == RED) {  // случай 1: дядя красный
-                    grandparent->color = RED;
-                    parent->color = BLACK;
-                    uncle->color = BLACK;
-                    node = grandparent;
-                }
-                else {
-                    if (node == parent->right) {  // случай 2: узел - правый потомок
-                        rotateLeft(parent);
-                        node = parent;
-                        parent = node->parent;
+    void fixInsert(Node* z) {
+        while (z->parent->color == RED) {
+            if (z->parent == z->parent->parent->left) {
+                Node* y = z->parent->parent->right;
+                if (y->color == RED) {
+                    z->parent->color = BLACK;
+                    y->color = BLACK;
+                    z->parent->parent->color = RED;
+                    z = z->parent->parent;
+                } else {
+                    if (z == z->parent->right) {
+                        z = z->parent;
+                        leftRotate(z);
                     }
-                    // случай 3: узел - левый потомок
-                    rotateRight(grandparent);
-                    swap(parent->color, grandparent->color);
-                    node = parent;
+                    z->parent->color = BLACK;
+                    z->parent->parent->color = RED;
+                    rightRotate(z->parent->parent);
                 }
-            }
-            else {  // симметричный случай, если родитель - правый потомок
-                Node* uncle = grandparent->left;
-                if (uncle != nullptr && uncle->color == RED) {
-                    grandparent->color = RED;
-                    parent->color = BLACK;
-                    uncle->color = BLACK;
-                    node = grandparent;
-                }
-                else {
-                    if (node == parent->left) {
-                        rotateRight(parent);
-                        node = parent;
-                        parent = node->parent;
+            } else {
+                Node* y = z->parent->parent->left;
+                if (y->color == RED) {
+                    z->parent->color = BLACK;
+                    y->color = BLACK;
+                    z->parent->parent->color = RED;
+                    z = z->parent->parent;
+                } else {
+                    if (z == z->parent->left) {
+                        z = z->parent;
+                        rightRotate(z);
                     }
-                    rotateLeft(grandparent);
-                    swap(parent->color, grandparent->color);
-                    node = parent;
+                    z->parent->color = BLACK;
+                    z->parent->parent->color = RED;
+                    leftRotate(z->parent->parent);
                 }
             }
         }
-        root->color = BLACK;  // корень всегда черный
+        root->color = BLACK;
     }
 
-    // вспомогательная функция: исправление нарушений при удалении
-    void fixDelete(Node*& node)
-    {
-        while (node != root && node->color == BLACK) {
-            if (node == node->parent->left) {  // если узел - левый потомок
-                Node* sibling = node->parent->right;
-                if (sibling->color == RED) {  // случай 1: брат красный
-                    sibling->color = BLACK;
-                    node->parent->color = RED;
-                    rotateLeft(node->parent);
-                    sibling = node->parent->right;
-                }
-                if ((sibling->left == nullptr || sibling->left->color == BLACK)
-                    && (sibling->right == nullptr || sibling->right->color == BLACK)) {  // случай 2: оба ребенка брата черные
-                    sibling->color = RED;
-                    node = node->parent;
-                }
-                else {
-                    if (sibling->right == nullptr || sibling->right->color == BLACK) {  // случай 3: правый ребенок брата черный
-                        if (sibling->left != nullptr)
-                            sibling->left->color = BLACK;
-                        sibling->color = RED;
-                        rotateRight(sibling);
-                        sibling = node->parent->right;
-                    }
-                    // случай 4: правый ребенок брата красный
-                    sibling->color = node->parent->color;
-                    node->parent->color = BLACK;
-                    if (sibling->right != nullptr)
-                        sibling->right->color = BLACK;
-                    rotateLeft(node->parent);
-                    node = root;
-                }
-            }
-            else {  // симметричный случай, если узел - правый потомок
-                Node* sibling = node->parent->left;
-                if (sibling->color == RED) {
-                    sibling->color = BLACK;
-                    node->parent->color = RED;
-                    rotateRight(node->parent);
-                    sibling = node->parent->left;
-                }
-                if ((sibling->left == nullptr || sibling->left->color == BLACK)
-                    && (sibling->right == nullptr || sibling->right->color == BLACK)) {
-                    sibling->color = RED;
-                    node = node->parent;
-                }
-                else {
-                    if (sibling->left == nullptr || sibling->left->color == BLACK) {
-                        if (sibling->right != nullptr)
-                            sibling->right->color = BLACK;
-                        sibling->color = RED;
-                        rotateLeft(sibling);
-                        sibling = node->parent->left;
-                    }
-                    sibling->color = node->parent->color;
-                    node->parent->color = BLACK;
-                    if (sibling->left != nullptr)
-                        sibling->left->color = BLACK;
-                    rotateRight(node->parent);
-                    node = root;
-                }
-            }
-        }
-        node->color = BLACK;  // делаем узел черным
-    }
-
-    // вспомогательная функция: поиск узла с минимальным значением
-    Node* minValueNode(Node*& node)
-    {
-        Node* current = node;
-        while (current->left != nullptr)
-            current = current->left;  // идем до крайнего левого узла
-        return current;
-    }
-
-    // вспомогательная функция: замена узлов в дереве
-    void transplant(Node*& root, Node*& u, Node*& v)
-    {
-        if (u->parent == nullptr)
-            root = v;  // если u - корень
+    void transplant(Node*& root, Node* u, Node* v) {
+        if (u->parent == NIL)
+            root = v;
         else if (u == u->parent->left)
-            u->parent->left = v;  // если u - левый потомок
+            u->parent->left = v;
         else
-            u->parent->right = v; // если u - правый потомок
-        if (v != nullptr)
-            v->parent = u->parent;  // обновляем родителя для v
+            u->parent->right = v;
+        v->parent = u->parent;
     }
 
-    // вспомогательная функция: вывод дерева
-    void printHelper(Node* node, string prefix = "", bool isLeft = false)
-{
-    if (node != nullptr) {
-        if (node->right)
-            printHelper(node->right, prefix + (isLeft ? "│   " : "    "), false);
-
-        cout << prefix;
-        cout << (isLeft ? "└──" : "┌──");
-        cout << node->data << "(" << (node->color == RED ? "R" : "B") << ")" << endl;
-
-        if (node->left)
-            printHelper(node->left, prefix + (isLeft ? "    " : "│   "), true);
+    Node* minValueNode(Node* node) {
+        while (node->left != NIL)
+            node = node->left;
+        return node;
     }
-}
 
+    void fixDelete(Node* x) {
+        while (x != root && x->color == BLACK) {
+            if (x == x->parent->left) {
+                Node* w = x->parent->right;
+                if (w->color == RED) {
+                    w->color = BLACK;
+                    x->parent->color = RED;
+                    leftRotate(x->parent);
+                    w = x->parent->right;
+                }
+                if (w->left->color == BLACK && w->right->color == BLACK) {
+                    w->color = RED;
+                    x = x->parent;
+                } else {
+                    if (w->right->color == BLACK) {
+                        w->left->color = BLACK;
+                        w->color = RED;
+                        rightRotate(w);
+                        w = x->parent->right;
+                    }
+                    w->color = x->parent->color;
+                    x->parent->color = BLACK;
+                    w->right->color = BLACK;
+                    leftRotate(x->parent);
+                    x = root;
+                }
+            } else {
+                Node* w = x->parent->left;
+                if (w->color == RED) {
+                    w->color = BLACK;
+                    x->parent->color = RED;
+                    rightRotate(x->parent);
+                    w = x->parent->left;
+                }
+                if (w->right->color == BLACK && w->left->color == BLACK) {
+                    w->color = RED;
+                    x = x->parent;
+                } else {
+                    if (w->left->color == BLACK) {
+                        w->right->color = BLACK;
+                        w->color = RED;
+                        leftRotate(w);
+                        w = x->parent->left;
+                    }
+                    w->color = x->parent->color;
+                    x->parent->color = BLACK;
+                    w->left->color = BLACK;
+                    rightRotate(x->parent);
+                    x = root;
+                }
+            }
+        }
+        x->color = BLACK;
+    }
 
-    // вспомогательная функция: удаление всех узлов дерева
-    void deleteTree(Node* node)
-    {
-        if (node != nullptr) {
-            deleteTree(node->left);   // удаляем левое поддерево
-            deleteTree(node->right);  // удаляем правое поддерево
-            delete node;              // удаляем текущий узел
+    void deleteTree(Node* node) {
+        if (node != NIL) {
+            deleteTree(node->left);
+            deleteTree(node->right);
+            delete node;
+        }
+    }
+
+    void printHelper(Node* node, string prefix = "", bool isLeft = false) {
+        if (node != NIL) {
+            if (node->right != NIL)
+                printHelper(node->right, prefix + (isLeft ? "│   " : "    "), false);
+
+            cout << prefix;
+            cout << (isLeft ? "└──" : "┌──");
+            cout << node->data << "(" << (node->color == RED ? "R" : "B") << ")" << endl;
+
+            if (node->left != NIL)
+                printHelper(node->left, prefix + (isLeft ? "    " : "│   "), true);
         }
     }
 
 public:
-    // конструктор: инициализация дерева
-    RedBlackTree()
-        : root(nullptr)
-    {
+    RedBlackTree() {
+        NIL = new Node(T());
+        NIL->color = BLACK;
+        NIL->left = NIL->right = NIL->parent = nullptr;
+        root = NIL;
     }
 
-    // деструктор: удаление дерева
-    ~RedBlackTree() { deleteTree(root); }
+    ~RedBlackTree() {
+        deleteTree(root);
+        delete NIL;
+    }
 
-    // публичная функция: вставка значения в дерево
-    void insert(T key)
-    {
-        Node* node = new Node(key);  // создаем новый узел
-        Node* parent = nullptr;
-        Node* current = root;
-        while (current != nullptr) {  // поиск места для вставки
-            parent = current;
-            if (node->data < current->data)
-                current = current->left;
+    void insert(T key) {
+        Node* node = new Node(key);
+        node->left = node->right = node->parent = NIL;
+
+        Node* y = NIL;
+        Node* x = root;
+
+        while (x != NIL) {
+            y = x;
+            if (node->data < x->data)
+                x = x->left;
             else
-                current = current->right;
+                x = x->right;
         }
-        node->parent = parent;  // устанавливаем родителя
-        if (parent == nullptr)
-            root = node;  // дерево было пустым
-        else if (node->data < parent->data)
-            parent->left = node;  // вставляем как левого потомка
+
+        node->parent = y;
+        if (y == NIL)
+            root = node;
+        else if (node->data < y->data)
+            y->left = node;
         else
-            parent->right = node;  // вставляем как правого потомка
-        fixInsert(node);  // исправляем возможные нарушения
+            y->right = node;
+
+        node->color = RED;
+        fixInsert(node);
     }
 
-    // публичная функция: удаление значения из дерева
-    void remove(T key)
-    {
-        Node* node = root;
-        Node* z = nullptr;
-        Node* x = nullptr;
-        Node* y = nullptr;
-        while (node != nullptr) {  // поиск удаляемого узла
-            if (node->data == key) {
-                z = node;
-            }
+    void remove(T key) {
+        Node* z = root;
+        Node* x;
+        Node* y;
 
-            if (node->data <= key) {
-                node = node->right;
-            }
-            else {
-                node = node->left;
-            }
+        while (z != NIL) {
+            if (z->data == key)
+                break;
+            else if (key < z->data)
+                z = z->left;
+            else
+                z = z->right;
         }
 
-        if (z == nullptr) {  // если узел не найден
+        if (z == NIL) {
             cout << "Key not found in the tree" << endl;
             return;
         }
 
         y = z;
         Color yOriginalColor = y->color;
-        if (z->left == nullptr) {  // если нет левого потомка
+
+        if (z->left == NIL) {
             x = z->right;
             transplant(root, z, z->right);
-        }
-        else if (z->right == nullptr) {  // если нет правого потомка
+        } else if (z->right == NIL) {
             x = z->left;
             transplant(root, z, z->left);
-        }
-        else {  // если есть оба потомка
-            y = minValueNode(z->right);  // находим минимальный в правом поддереве
+        } else {
+            y = minValueNode(z->right);
             yOriginalColor = y->color;
             x = y->right;
-            if (y->parent == z) {
-                if (x != nullptr)
-                    x->parent = y;
-            }
+
+            if (y->parent == z)
+                x->parent = y;
             else {
                 transplant(root, y, y->right);
                 y->right = z->right;
                 y->right->parent = y;
             }
+
             transplant(root, z, y);
             y->left = z->left;
             y->left->parent = y;
             y->color = z->color;
         }
-        delete z;  // удаляем узел
-        if (yOriginalColor == BLACK) {  // если удалили черный узел
-            fixDelete(x);  // исправляем нарушения
-        }
+
+        delete z;
+        if (yOriginalColor == BLACK)
+            fixDelete(x);
     }
 
-    // публичная функция: вывод дерева
-    void printTree()
-{
-    if (root == nullptr)
-        cout << "Tree is empty." << endl;
-    else {
-        printHelper(root, "", false);
+    void printTree() {
+        if (root == NIL) cout << "Tree is empty.\n";
+        else printHelper(root);
     }
-}
 };
+
 
 int main()
 {
