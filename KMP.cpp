@@ -7,7 +7,7 @@ using namespace std;
 // функция для вычисления префикс-функции строки
 vector<int> prefix_function(const string &s)
 {
-    int n = s.size();  // получаем длину строки
+    int n = s.size();
     vector<int> p(n, 0);  // создаем массив для хранения значений префикс-функции, заполняем нулями
 
     for (int i = 1; i < n; i++)  // начинаем с 1, так как для первого символа префикс-функция всегда 0
@@ -21,7 +21,7 @@ vector<int> prefix_function(const string &s)
             p[i] = j + 1;  // увеличиваем значение префикс-функции
     }
 
-    return p;  // возвращаем массив значений префикс-функции
+    return p;
 }
 
 // функция для поиска подстроки в тексте с использованием алгоритма Кнута-Морриса-Пратта
@@ -39,7 +39,7 @@ vector<int> kmp_search(const string &text, const string &pattern)
         }
     }
 
-    return matches;  // возвращаем массив индексов совпадений
+    return matches; 
 }
 
 int main()
