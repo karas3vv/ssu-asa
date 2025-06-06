@@ -46,18 +46,18 @@ int main()
 {
     string text, pattern;
 
-    cout << "введите исходную строку: ";
+    cout << "Введите исходную строку: ";
     getline(cin, text);
-    cout << "введите искомую подстроку: ";
+    cout << "Введите искомую подстроку: ";
     getline(cin, pattern);
 
     vector<int> matches = kmp_search(text, pattern);  // ищем все вхождения подстроки
     
     if (matches.size() == 0)
-        cout << "не удалось найти совпадения";
+        cout << "Не удалось найти совпадения";
     else 
     {
-        cout << "результат (индекс(-ы), с которого начинается подстрока): ";
+        cout << "Результат (индекс(-ы), с которого начинается подстрока): ";
         for (int idx : matches)
         {
             cout << idx << " ";
